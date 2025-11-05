@@ -23,13 +23,13 @@ app.use(express.static(path.join(__dirname)));
 
 // ===== Email transporter =====
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465, // SSL port
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
 });
 
 // ===== ROUTES =====
@@ -44,7 +44,7 @@ app.post('/submit-survey', async (req, res) => {
 
         const surveyId = saveSurveyData(userData, surveyAnswers);
 
-        // Send emails asynchronously, catch errors
+        // Send emails asynchronously
         sendWelcomeEmail(userData.email, userData.name).catch(err => console.error('Welcome email error:', err));
         sendAdminEmail(surveyId, userData, surveyAnswers).catch(err => console.error('Admin email error:', err));
 
@@ -69,41 +69,49 @@ app.get('/admin-data', (req, res) => {
 // ===== Email helpers =====
 async function sendWelcomeEmail(email, name) {
     if (!email) return;
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Welcome to SURAI – We’re Glad You’re Here!',
-        html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background: #f7f8fa; border-radius: 8px;">
-                <h2>Hello ${name || 'there'}, welcome to SURAI!</h2>
-                <p>Thanks for joining our AI interaction survey. Your input helps us improve!</p>
-                <p>– The SURAI Team</p>
-            </div>
-        `
-    };
-    await transporter.sendMail(mailOptions);
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Welcome to SURAI – We’re Glad You’re Here!',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; background: #f7f8fa; border-radius: 8px;">
+                    <h2>Hello ${name || 'there'}, welcome to SURAI!</h2>
+                    <p>Thanks for joining our AI interaction survey. Your input helps us improve!</p>
+                    <p>– The SURAI Team</p>
+                </div>
+            `
+        });
+        console.log(`✅ Welcome email sent to ${email}`);
+    } catch (err) {
+        console.error('Failed to send welcome email:', err);
+    }
 }
 
 async function sendAdminEmail(surveyId, userData, surveyAnswers) {
     const adminEmail = process.env.ADMIN_EMAIL;
     if (!adminEmail) return;
 
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: adminEmail,
-        subject: `📥 New SURAI Survey Submission | ID: ${surveyId}`,
-        html: `
-            <div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; background: #f1f5f9; border-radius: 8px;">
-                <h3>New Submission Received</h3>
-                <p><strong>Name:</strong> ${userData.name}</p>
-                <p><strong>Email:</strong> ${userData.email}</p>
-                <p><strong>Age:</strong> ${userData.age || 'N/A'}</p>
-                <h4>Answers:</h4>
-                <ul>${surveyAnswers.map(a => `<li>${a}</li>`).join('')}</ul>
-            </div>
-        `
-    };
-    await transporter.sendMail(mailOptions);
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: adminEmail,
+            subject: `📥 New SURAI Survey Submission | ID: ${surveyId}`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; background: #f1f5f9; border-radius: 8px;">
+                    <h3>New Submission Received</h3>
+                    <p><strong>Name:</strong> ${userData.name}</p>
+                    <p><strong>Email:</strong> ${userData.email}</p>
+                    <p><strong>Age:</strong> ${userData.age || 'N/A'}</p>
+                    <h4>Answers:</h4>
+                    <ul>${surveyAnswers.map(a => `<li>${a}</li>`).join('')}</ul>
+                </div>
+            `
+        });
+        console.log(`✅ Admin email sent for survey ID ${surveyId}`);
+    } catch (err) {
+        console.error('Failed to send admin email:', err);
+    }
 }
 
 // ===== Start server =====
