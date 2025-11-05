@@ -12,12 +12,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Allow all origins for testing (you can later restrict to your frontend URL)
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-}));
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+};
+
+app.use(cors(corsOptions));
 
 // Serve your frontend (optional: if HTML is in same folder)
 app.use(express.static(path.join(__dirname)));
