@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SURAI - Shape the Future of AI by sharing your interaction preferences">
+<meta name="theme-color" content="#667eea">
+<title>SURAI - AI Interaction Survey</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* === BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    min-height:100vh;
+    color:#333;
+    overflow-x:hidden;
+    transition:background 0.6s ease;
+}
+html{scroll-behavior:smooth}
+.hidden{display:none!important}
+.fade{animation:fadeIn 0.6s ease forwards;opacity:0}
+@keyframes fadeIn{to{opacity:1}}
+button,input,select{font-family:inherit;}
+
+/* === UTILITIES === */
+.centered{display:flex;align-items:center;justify-content:center;}
+.card{
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    padding:50px 40px;
+    max-width:650px;
+    width:90%;
+    animation:fadeIn 0.8s ease;
+}
+.btn{
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    padding:13px 28px;
+    cursor:pointer;
+    transition:all .3s ease;
+}
+.btn-primary{
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:#fff;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(102,126,234,0.5)}
+.btn-secondary{
+    background:#fff;
+    color:#667eea;
+    border:2px solid #667eea;
+}
+.btn-secondary:hover{background:#f8f9ff}
+
+/* === INTRO === */
+.intro{text-align:center;min-height:100vh;flex-direction:column;}
+.surai-logo{
+    font-size:70px;
+    font-weight:900;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+.intro h1{font-size:36px;margin-bottom:15px}
+.intro p{color:#555;margin-bottom:35px;line-height:1.8}
+.stats{display:flex;justify-content:center;gap:25px;margin-bottom:40px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-number{font-size:28px;font-weight:700;background:linear-gradient(135deg,#667eea,#764ba2);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-label{font-size:12px;color:#888;text-transform:uppercase}
+
+/* === FORM === */
+.form-group{margin-bottom:20px}
+.form-group label{color:#667eea;font-weight:600;display:block;margin-bottom:8px;font-size:13px;text-transform:uppercase}
+.form-group input,.form-group select{
+    width:100%;padding:12px 14px;border:2px solid #eee;border-radius:10px;font-size:14px;
+}
+.form-group input:focus,.form-group select:focus{
+    outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1);
+}
+
+/* === TOS === */
+.tos-content{max-height:300px;overflow-y:auto;color:#555;line-height:1.7;padding-right:10px;margin-bottom:20px;}
+.tos-content h3{color:#667eea;margin-top:10px}
+.tos-checkbox{display:flex;align-items:center;gap:10px;margin:15px 0;}
+.tos-checkbox input{accent-color:#667eea;width:18px;height:18px;cursor:pointer;}
+
+/* === SURVEY === */
+.progress{height:8px;background:#eee;border-radius:10px;overflow:hidden;margin-bottom:20px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);width:0%;transition:width .4s ease}
+.question-number{font-size:12px;color:#667eea;font-weight:700;text-transform:uppercase;margin-bottom:10px}
+.question-text{font-size:22px;font-weight:600;margin-bottom:25px;color:#333}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{
+    border:2px solid #eee;border-radius:12px;padding:15px;cursor:pointer;transition:all .3s ease;
+}
+.option:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}
+.option.selected{border-color:#667eea;background:linear-gradient(135deg,rgba(102,126,234,0.1),rgba(118,75,162,0.1));color:#667eea;font-weight:600;}
+.controls{display:flex;gap:15px;margin-top:30px;justify-content:space-between;flex-wrap:wrap}
+
+/* === SUCCESS === */
+.success{text-align:center}
+.success .icon{font-size:70px;color:#4caf50;margin-bottom:15px}
+.success h2{font-size:30px;margin-bottom:10px}
+.success p{color:#555;line-height:1.6}
+
+/* === CHATBOT === */
+.chatbot-toggle{
+    position:fixed;bottom:25px;right:25px;width:60px;height:60px;border-radius:50%;
+    background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:24px;
+    border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.3);z-index:999;transition:all .3s ease;
+}
+.chatbot-toggle:hover{transform:scale(1.1)}
+.chatbot-window{
+    position:fixed;bottom:100px;right:25px;width:340px;height:450px;
+    background:#fff;border-radius:15px;box-shadow:0 10px 40px rgba(0,0,0,.3);
+    display:none;flex-direction:column;overflow:hidden;z-index:998;
+}
+.chatbot-header{
+    background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:15px;font-weight:600;text-align:center;
+}
+.chatbot-messages{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.message{padding:10px 14px;border-radius:10px;font-size:13px;max-width:80%;}
+.message.user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;align-self:flex-end;}
+.message.bot{background:#f0f0f0;align-self:flex-start;}
+.chatbot-input-area{display:flex;padding:10px;border-top:1px solid #eee}
+.chatbot-input{flex:1;border:1px solid #ddd;border-radius:20px;padding:8px 14px;font-size:13px}
+.chatbot-send{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:50%;width:35px;height:35px;margin-left:8px;cursor:pointer}
+.chatbot-send:hover{opacity:.9}
+.thinking{background:#f8f9ff;border:1px solid #eee;border-radius:10px;padding:8px 12px;margin:5px 0;font-size:13px;color:#888}
+.thinking-dots{display:inline}
+.dots{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0}}
+
+/* === RESPONSIVE === */
+@media(max-width:480px){
+    .card{padding:30px 20px}
+    .chatbot-window{width:90%;right:5%;bottom:90px}
+}
+
+/* === AD MODAL === */
+.ad-modal{
+    position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);
+    display:flex;align-items:center;justify-content:center;z-index:1000;
+}
+.ad-content{
+    background:#fff;border-radius:15px;padding:30px;text-align:center;max-width:400px;width:90%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.ad-icon{font-size:50px;color:#667eea;margin-bottom:20px}
+.ad-content h3{margin-bottom:15px;color:#333}
+.ad-content p{margin-bottom:25px;color:#666;line-height:1.6}
+.ad-close{
+    background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;
+    border-radius:10px;padding:12px 25px;font-weight:600;cursor:pointer;
+}
+.ad-close:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,0.4)}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<section class="intro centered" id="introSection">
+    <div class="card">
+        <div class="surai-logo">SURAI</div>
+        <h1>Shape the Future of AI</h1>
+        <p>Help us understand how you want AI to interact with you. Your feedback drives innovation in human-AI communication and help us create AI that help humanity</p>
+        <div class="stats">
+            <div class="stat"><div class="stat-number">100K+</div><div class="stat-label">Responses</div></div>
+            <div class="stat"><div class="stat-number">50+</div><div class="stat-label">Countries</div></div>
+            <div class="stat"><div class="stat-number">7 min</div><div class="stat-label">Avg Time</div></div>
+        </div>
+        <button class="btn btn-primary" onclick="goTo('userinfo')">Start Survey</button>
+        <button class="btn btn-secondary" onclick="toggleChatbot()">Ask Questions</button>
+    </div>
+</section>
+
+<!-- USER INFO -->
+<section class="centered hidden" id="userinfoSection">
+    <div class="card">
+        <h2>Your Information</h2>
+        <p style="color:#666;margin-bottom:25px">We'll use this to personalize your survey experience.</p>
+        <form onsubmit="goTo('tos');return false;">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="userName" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="userEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Age Range *</label>
+                <select id="userAge" required>
+                    <option value="">Select...</option>
+                    <option>Under 16</option><option>16-20</option><option>21-34</option>
+                    <option>35-44</option><option>45+</option>
+                </select>
+            </div>
+            <div class="centered" style="gap:15px">
+                <button class="btn btn-secondary" type="button" onclick="goTo('intro')">Back</button>
+                <button class="btn btn-primary" type="submit">Continue</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- TERMS -->
+<section class="centered hidden" id="tosSection">
+    <div class="card">
+        <h2>Terms of Service</h2>
+        <div class="tos-content">
+            <h3>1. Data Privacy</h3>
+            <p>Your responses are anonymous and used solely for improving AI interaction design.</p>
+            <p>   We SURAI take full responsibility of your Data
+            </p>
+            <h3>2. Consent</h3>
+            <p>By proceeding, you agree that your data may be used for AI training insights.</p>
+            <h3>3. Rights</h3>
+            <p>You may withdraw participation at any point. No personal data is stored beyond consent.</p>
+            <h3>4. Warning</h3>
+            <p>If you go against any of our rules and regulations. You account will officially be *Banned*</p>
+        </div>
+        <div class="tos-checkbox">
+            <input type="checkbox" id="agreeTos"> <label for="agreeTos">I have read and agree to the Terms of Service.</label>
+        </div>
+        <div class="centered" style="gap:15px">
+            <button class="btn btn-secondary" onclick="goTo('userinfo')">Back</button>
+            <button class="btn btn-primary" onclick="acceptTos()">Accept & Continue</button>
+        </div>
+    </div>
+</section>
+
+<!-- SURVEY -->
+<section class="centered hidden" id="surveySection">
+    <div class="card">
+        <div class="progress"><div class="progress-fill" id="progressBar"></div></div>
+        <div id="surveyContent"></div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="prevQuestion()">Back</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+    </div>
+</section>
+
+<!-- SUCCESS -->
+<section class="centered hidden" id="successSection">
+    <div class="card success">
+        <div class="icon">✔</div>
+        <h2>Thank You!</h2>
+        <p>Your insights help us make AI interactions, smarter and more human.</p>
+        <p id="userDetails"></p>
+        <p>SURAI will inform you if we have more updated surveys, try and use WriteGPT and see if we were able to make it to your liking.</p>
+    </div>
+</section>
+
+<!-- CHATBOT -->
+<button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()">💬</button>
+<div class="chatbot-window" id="chatbotWindow">
+    <div class="chatbot-header">SURAI Assistant</div>
+    <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot">Hello 👋! I'm SURAI Assistant. Ask me about the survey or privacy.</div>
+    </div>
+    <div class="chatbot-input-area">
+        <input type="text" id="chatInput" class="chatbot-input" placeholder="Type your question...">
+        <button class="chatbot-send" onclick="sendMessage()">➤</button>
+    </div>
+</div>
+
+<!-- AD MODAL -->
+<div class="ad-modal hidden" id="adModal">
+    <div class="ad-content">
+        <div class="ad-icon"><i class="fas fa-rocket"></i></div>
+        <h3>SURAI TEAM</h3>
+        <p>Thank you for participating in SURAI surveys.</p>
+        <button class="ad-close" onclick="closeAd()">Done</button>
+    </div>
+</div>
+
+<script>
+/* === NAVIGATION === */
+function goTo(section){
+    document.querySelectorAll('section').forEach(sec=>sec.classList.add('hidden'));
+    document.getElementById(section+'Section').classList.remove('hidden');
+    window.scrollTo(0,0);
+}
+
+/* === TOS === */
+function acceptTos(){
+    if(!document.getElementById('agreeTos').checked){
+        alert('Please agree to the Terms to continue.');
+        return;
+    }
+    goTo('survey');
+    loadSurvey();
+}
+
+/* === SURVEY LOGIC === */
+const questions=[
+    {q:'How do you prefer AI to communicate?',o:['Text only','Voice + Text','Voice only','Depends on context']},
+    {q:'What tone should AI use?',o:['Formal','Friendly','Playful','Adaptive']},
+    {q:'How often should AI check in with you?',o:['Hourly','Daily','Weekly','Only when needed']},
+    {q:'Do you want your AI to remember past conversations?',o:['Yes','No','Maybe, with my permission']},
+    {q:'Would you trust AI to make small decisions for you?',o:['Yes','No','Depends on decision type']},
+    {q:'Are you afraid of AI taking over the world',o:['Yes','no','maybe','Am scared','I do not believe it can happen']},
+    {q:'Should AI voice be so advanced that it sounds like a human voice',o:['Yes','No']},
+    {q:'What would you like to communicate with AI?', o: ['Instructions', 'Helpful tips', 'Questioning about a specific topic', 'Personal information']},
+    {q:'Do you have any other concerns or preferences regarding AI communication and trust?', o: ['Privacy', 'Accuracy', 'Transparency', 'Simplicity', 'Security', 'Accessibility']},
+    {q:'How important is it for AI to explain its decisions?', o: ['Very important', 'Somewhat important', 'Not important', 'No opinion']},
+    {q:'Would you prefer AI to have a personality?', o: ['Yes', 'No', 'Maybe']},
+    {q:'How should AI handle errors or mistakes?', o: ['Apologize and correct', 'Ignore and continue', 'Ask for clarification', 'Learn from it']},
+    {q:'Do you want AI to be proactive in offering help?', o: ['Yes', 'No', 'Only when asked']},
+    {q:'What level of customization do you want in AI interactions?', o: ['High', 'Medium', 'Low', 'None']},
+    {q:'Are you comfortable with AI learning from your interactions?', o: ['Yes', 'No', 'Only with consent']}
+];
+let index=0;let answers=[];
+function loadSurvey(){
+    index=0;answers=[];
+    showQuestion();
+}
+function showQuestion(){
+    const q=questions[index];
+    const content=document.getElementById('surveyContent');
+    content.innerHTML=`
+      <div class="question-number">Question ${index+1} of ${questions.length}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">
+         ${q.o.map(opt=>`<div class="option" onclick="selectOption(this,'${opt}')">${opt}</div>`).join('')}
+      </div>`;
+    document.getElementById('progressBar').style.width=((index)/questions.length*100)+'%';
+    document.getElementById('nextBtn').innerText=(index===questions.length-1)?'Submit':'Next';
+    // Highlight previously selected answer
+    if(answers[index]){
+        document.querySelectorAll('.option').forEach(el=>{
+            if(el.textContent===answers[index]) el.classList.add('selected');
+        });
+    }
+}
+function selectOption(el,ans){
+    document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[index]=ans;
+}
+function nextQuestion(){
+    if(!answers[index]){alert('Please select an answer.');return;}
+    if(index<questions.length-1){index++;showQuestion();}
+    else finishSurvey();
+}
+function prevQuestion(){if(index>0){index--;showQuestion();}}
+async function finishSurvey(){
+    document.getElementById('progressBar').style.width='100%';
+    const name=document.getElementById('userName').value;
+    const email=document.getElementById('userEmail').value;
+    const age=document.getElementById('userAge').value;
+
+    // Prepare data for submission
+    const userData = { name, email, age };
+    const surveyAnswers = answers;
+
+    // Show loading state
+    const nextBtn = document.getElementById('nextBtn');
+    const originalText = nextBtn.innerText;
+    nextBtn.innerText = 'Submitting...';
+    nextBtn.disabled = true;
+
+    try {
+        // Submit survey to backend
+        const response = await fetch('http://localhost:3000/submit-survey', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userData, surveyAnswers })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            goTo('success');
+            document.getElementById('userDetails').innerHTML=
+            `<div class="success-details">Survey completed by <b>${name}</b> (${email})<br>Responses recorded successfully ✅<br>Survey ID: ${result.surveyId}</div>`;
+            // Show ad after a short delay
+            setTimeout(() => {
+                document.getElementById('adModal').classList.remove('hidden');
+            }, 2000);
+        } else {
+            alert('Error submitting survey. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting survey. Please check your connection.');
+    } finally {
+        // Revert loading state
+        nextBtn.innerText = originalText;
+        nextBtn.disabled = false;
+    }
+}
+
+/* === CHATBOT === */
+document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+});
+
+function toggleChatbot(){
+    const win=document.getElementById('chatbotWindow');
+    win.style.display=win.style.display==='flex'?'none':'flex';
+    if(win.style.display==='flex'){
+        // Ensure messages are visible when opened
+        document.getElementById('chatbotMessages').scrollTop = document.getElementById('chatbotMessages').scrollHeight;
+    }
+}
+function sendMessage(){
+    const input=document.getElementById('chatInput');
+    const msg=input.value.trim();
+    if(!msg)return;
+    addMessage('user',msg);
+    input.value='';
+    // Show thinking indicator
+    addThinkingIndicator();
+    setTimeout(()=>botReply(msg),1000); // Increased delay for thinking
+}
+function addMessage(sender,text){
+    const div=document.createElement('div');
+    div.className='message '+sender;
+    if(sender==='bot'){
+        typeWriter(div, text);
+    } else {
+        div.textContent=text;
+    }
+    document.getElementById('chatbotMessages').appendChild(div);
+    div.scrollIntoView({behavior:'smooth'});
+}
+function addThinkingIndicator(){
+    const div=document.createElement('div');
+    div.className='message bot thinking';
+    div.innerHTML='<span class="thinking-dots">SURAI Assistant is thinking</span><span class="dots">...</span>';
+    document.getElementById('chatbotMessages').appendChild(div);
+    div.scrollIntoView({behavior:'smooth'});
+    return div;
+}
+function removeThinkingIndicator(){
+    const thinking = document.querySelector('.thinking');
+    if(thinking) thinking.remove();
+}
+function typeWriter(element, text, speed = 50) {
+    let i = 0;
+    element.textContent = '';
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+function botReply(msg){
+    removeThinkingIndicator();
+    msg=msg.toLowerCase();
+    let reply="Sorry, I was only designed to give information about SURAI and nothing else. But if you need vast information, try saying 'Detailed info' or use WriteGPT or ChatGPT (if up to date).";
+
+    // Expanded responses about SURAI
+    if(msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) reply="Hi there 👋! I'm SURAI Assistant. How can I help you with the survey or learn more about SURAI?";
+    else if(msg.includes('privacy') || msg.includes('data')) reply="Your privacy is our top priority at SURAI. All responses are anonymous and used solely to improve AI interaction design. No personal data is shared or sold.";
+    else if(msg.includes('survey') || msg.includes('questionnaire')) reply="The SURAI survey helps us understand how you want AI to interact with you. It takes about 7 minutes and covers topics like communication preferences, trust, and AI personality.";
+    else if(msg.includes('bye') || msg.includes('goodbye')) reply="Goodbye! 👋 Thanks for chatting with SURAI Assistant. Don't forget to complete the survey!";
+    else if(msg.includes('what is surai') || msg.includes('about surai')) reply="SURAI stands for 'Shape the Future of AI'. We're a platform that collects user preferences on AI interactions to help build better, more human-like AI systems.";
+    else if(msg.includes('how does it work') || msg.includes('how it works')) reply="SURAI works by gathering anonymous survey responses from users worldwide. We analyze these to understand preferences for AI communication, trust, and behavior, then share insights with AI developers.";
+    else if(msg.includes('why participate') || msg.includes('why take survey')) reply="Participating in SURAI helps shape the future of AI. Your input ensures AI systems are designed to be more helpful, trustworthy, and aligned with human preferences.";
+    else if(msg.includes('anonymous') || msg.includes('confidential')) reply="Yes, all SURAI survey responses are completely anonymous. We don't collect or store any personally identifiable information beyond what you voluntarily provide.";
+    else if(msg.includes('time') || msg.includes('long')) reply="The average SURAI survey takes about 7 minutes to complete. We designed it to be quick yet comprehensive to gather meaningful insights.";
+    else if(msg.includes('countries') || msg.includes('global')) reply="SURAI has participants from over 50 countries worldwide. This global perspective helps us create AI that works well across different cultures and languages.";
+    else if(msg.includes('responses') || msg.includes('participants')) reply="SURAI has collected over 100,000 responses so far. Each response helps us build a clearer picture of how people want to interact with AI.";
+    else if(msg.includes('ai interaction') || msg.includes('ai communication')) reply="SURAI focuses on understanding preferences for AI interaction, including communication styles, trust levels, personality, and how AI should handle decisions and errors.";
+    else if(msg.includes('trust') || msg.includes('reliable')) reply="Trust is a key aspect we study at SURAI. We ask about comfort levels with AI making decisions, remembering conversations, and learning from interactions.";
+    else if(msg.includes('personality') || msg.includes('character')) reply="SURAI explores whether users want AI to have distinct personalities, from formal and professional to friendly and playful, or even adaptive based on context.";
+    else if(msg.includes('voice') || msg.includes('speech')) reply="We ask about preferences for AI voice interactions - whether users prefer text-only, voice+text, or advanced human-like voices.";
+    else if(msg.includes('errors') || msg.includes('mistakes')) reply="SURAI investigates how AI should handle errors, such as apologizing and correcting, asking for clarification, or learning from mistakes to improve.";
+    else if(msg.includes('proactive') || msg.includes('initiative')) reply="We study if users want AI to be proactive in offering help or only respond when asked, and how often AI should check in.";
+    else if(msg.includes('customization') || msg.includes('personalize')) reply="SURAI asks about desired levels of customization in AI interactions, from high personalization to minimal or no customization.";
+    else if(msg.includes('learning') || msg.includes('improve')) reply="We explore comfort with AI learning from interactions to improve, and whether this should require explicit consent.";
+    else if(msg.includes('future') || msg.includes('goals')) reply="SURAI's goal is to create AI that enhances human life through better, more intuitive interactions. Your feedback helps make this vision a reality.";
+    else if(msg.includes('writegpt') || msg.includes('recommend')) reply="WriteGPT is our AI writing assistant that we recommend trying after the survey. It uses insights from SURAI to create more natural, helpful content.";
+    else if(msg.includes('detailed info') || msg.includes('more information')) reply="SURAI is a comprehensive platform for AI interaction research. We collect global preferences on AI communication, trust, personality, and ethics. Our data helps developers create AI that's more aligned with human needs and values.";
+    else if(msg.includes('ethics') || msg.includes('responsible')) reply="Ethics and responsibility are core to SURAI. We ensure all data collection is transparent, consensual, and focused on creating beneficial AI for humanity.";
+    else if(msg.includes('benefits') || msg.includes('impact')) reply="By participating in SURAI, you contribute to developing AI that's more trustworthy, efficient, and enjoyable to use. This impacts everything from customer service bots to personal assistants.";
+    else if(msg.includes('questions') || msg.includes('help')) reply="I'm here to help! Ask me about SURAI, the survey, privacy, or anything related to AI interaction preferences. I can provide information on our goals, methods, and impact.";
+    else if(msg.includes('contact') || msg.includes('reach')) reply="For questions about SURAI, you can contact us through the survey completion page or check our website. We're always happy to hear from participants!";
+    else if(msg.includes('updates') || msg.includes('news')) reply="SURAI will inform you of updates via email if you provided one. We share new survey opportunities and insights from our research.";
+    else if(msg.includes('thank you') || msg.includes('thanks')) reply="You're welcome! Thank you for your interest in SURAI. Your participation helps build a better AI future.";
+    else if(msg.includes('concerns') || msg.includes('worries')) reply="Common concerns include AI taking over jobs or privacy issues. SURAI addresses these by focusing on human-centered AI design and strict data protection.";
+    else if(msg.includes('ai takeover') || msg.includes('fear')) reply="SURAI studies fears about AI, including takeover scenarios. Our research shows most people are cautiously optimistic, wanting beneficial AI development.";
+    else if(msg.includes('transparency') || msg.includes('explain')) reply="Transparency is crucial at SURAI. We ask how important it is for AI to explain its decisions and reasoning, ensuring users understand AI behavior.";
+    else if(msg.includes('accessibility') || msg.includes('inclusive')) reply="SURAI considers accessibility in AI design, asking about preferences for simple, clear interactions that work for diverse users.";
+
+    addMessage('bot',reply);
+}
+
+/* === AD FUNCTIONS === */
+function closeAd(){
+    document.getElementById('adModal').classList.add('hidden');
+}
+</script>
+</body>
+</html>

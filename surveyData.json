@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1762281015129",
+    "user": {
+      "name": "elium",
+      "email": "mvnfgj@gmail.com",
+      "age": "35-44"
+    },
+    "answers": [
+      "Depends on context",
+      "Adaptive",
+      "Weekly",
+      "Maybe, with my permission",
+      "Depends on decision type",
+      "maybe",
+      "Yes",
+      "Personal information",
+      "Accuracy"
+    ],
+    "timestamp": "2025-11-04T18:30:15.130Z"
+  },
+  {
+    "id": "1762335693637",
+    "user": {
+      "name": "praise Ovie",
+      "email": "praisejiro43210@gmail.com",
+      "age": "16-20"
+    },
+    "answers": [
+      "Depends on context",
+      "Adaptive",
+      "Only when needed",
+      "Maybe, with my permission",
+      "Depends on decision type",
+      "Am scared",
+      "Yes",
+      "Helpful tips",
+      "Privacy",
+      "Very important",
+      "Yes",
+      "Apologize and correct",
+      "Yes",
+      "High",
+      "Yes"
+    ],
+    "timestamp": "2025-11-05T09:41:33.637Z"
+  },
+  {
+    "id": "1762336303522",
+    "user": {
+      "name": "Praise Ovie",
+      "email": "praisejiro43210@gmail.com",
+      "age": "16-20"
+    },
+    "answers": [
+      "Depends on context",
+      "Adaptive",
+      "Only when needed",
+      "Maybe, with my permission",
+      "Depends on decision type",
+      "maybe",
+      "No",
+      "Questioning about a specific topic",
+      "Transparency",
+      "No opinion",
+      "Maybe",
+      "Learn from it",
+      "Only when asked",
+      "None",
+      "No"
+    ],
+    "timestamp": "2025-11-05T09:51:43.522Z"
+  },
+  {
+    "id": "1762337014025",
+    "user": {
+      "name": "praise",
+      "email": "praisejiro43210@gmail.com",
+      "age": "16-20"
+    },
+    "answers": [
+      "Depends on context",
+      "Adaptive",
+      "Only when needed",
+      "Maybe, with my permission",
+      "Depends on decision type",
+      "no",
+      "Yes",
+      "Questioning about a specific topic",
+      "Transparency",
+      "No opinion",
+      "No",
+      "Ask for clarification",
+      "Only when asked",
+      "Low",
+      "Only with consent"
+    ],
+    "timestamp": "2025-11-05T10:03:34.025Z"
+  },
+  {
+    "id": "1762337166141",
+    "user": {
+      "name": "ovie",
+      "email": "praisejiro43210@gmail.com",
+      "age": "16-20"
+    },
+    "answers": [
+      "Depends on context",
+      "Adaptive",
+      "Weekly",
+      "Yes",
+      "Yes",
+      "no",
+      "Yes",
+      "Instructions",
+      "Accuracy",
+      "Not important",
+      "Yes",
+      "Ask for clarification",
+      "Only when asked",
+      "Low",
+      "Only with consent"
+    ],
+    "timestamp": "2025-11-05T10:06:06.141Z"
+  },
+  {
+    "id": "1762338888465",
+    "user": {
+      "name": "max",
+      "email": "itech@gmail.com",
+      "age": "16-20"
+    },
+    "answers": [
+      "Voice only",
+      "Adaptive",
+      "Weekly",
+      "No",
+      "Depends on decision type",
+      "maybe",
+      "No",
+      "Questioning about a specific topic",
+      "Accessibility",
+      "No opinion",
+      "Maybe",
+      "Ask for clarification",
+      "Only when asked",
+      "None",
+      "Only with consent"
+    ],
+    "timestamp": "2025-11-05T10:34:48.465Z"
+  }
+]
