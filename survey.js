@@ -1,35 +1,28 @@
-const fs = require('fs');
-const path = require('path');
+const nodemailer = require('nodemailer');
 
-const surveyDataFile = path.join(__dirname, 'surveyData.json');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
-// Initialize survey data file if it doesn't exist
-if (!fs.existsSync(surveyDataFile)) {
-    fs.writeFileSync(surveyDataFile, JSON.stringify([], null, 2));
-}
+app.post('/submit', async (req, res) => {
+  const { name, email, message } = req.body;
 
-// Function to save survey data
-function saveSurveyData(userData, surveyAnswers) {
-    const data = {
-        id: Date.now().toString(),
-        user: userData,
-        answers: surveyAnswers,
-        timestamp: new Date().toISOString()
-    };
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'youremail@gmail.com',
+    subject: 'New Survey Submission',
+    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+  };
 
-    const existingData = JSON.parse(fs.readFileSync(surveyDataFile, 'utf8'));
-    existingData.push(data);
-    fs.writeFileSync(surveyDataFile, JSON.stringify(existingData, null, 2));
-
-    return data.id;
-}
-
-// Function to get all survey data (for admin purposes)
-function getAllSurveyData() {
-    return JSON.parse(fs.readFileSync(surveyDataFile, 'utf8'));
-}
-
-module.exports = {
-    saveSurveyData,
-    getAllSurveyData
-};
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'Email sent successfully' });
+  } catch (error) {
+    console.error('Email error:', error);
+    res.status(500).json({ success: false, error: 'Failed to send email' });
+  }
+});
