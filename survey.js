@@ -8,7 +8,7 @@ if (!fs.existsSync(surveyDataFile)) {
     fs.writeFileSync(surveyDataFile, JSON.stringify([], null, 2));
 }
 
-// Function to save survey data
+// Save survey data
 function saveSurveyData(userData, surveyAnswers) {
     const data = {
         id: Date.now().toString(),
@@ -29,7 +29,7 @@ function saveSurveyData(userData, surveyAnswers) {
     return data.id;
 }
 
-// Function to get all survey data (for admin purposes)
+// Get all survey data
 function getAllSurveyData() {
     try {
         return JSON.parse(fs.readFileSync(surveyDataFile, 'utf8'));
